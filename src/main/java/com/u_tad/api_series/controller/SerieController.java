@@ -1,14 +1,11 @@
 package com.u_tad.api_series.controller;
 
+import com.u_tad.api_series.model.ApiResponse;
 import com.u_tad.api_series.model.Serie;
 import com.u_tad.api_series.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/series")
@@ -27,4 +24,18 @@ public class SerieController {
         Serie serieNew = serieService.saveOrUpdate(serie);
         return ResponseEntity.ok(serieNew);
     }
+
+    @PatchMapping
+    public ResponseEntity<ApiResponse<Serie>> update(@RequestBody Serie serie) {
+        // System.out.println("Llega => " + serie.getName());
+        try {
+            Serie serieNew = serieService.saveOrUpdate(serie);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Serie actualizada", serieNew));
+        } catch (Exception e) {
+            System.out.println("Error => " + e.getMessage());
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "Error " + e.getMessage(), null));
+        }
+    }
+
+
 }
